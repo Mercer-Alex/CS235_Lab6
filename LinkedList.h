@@ -68,24 +68,22 @@ public:
             }
             _size++;
         }
-    };
+    }
 
-    /*
-    insertAfter
-
-    A node with the given value should be inserted immediately after the
-    node whose value is equal to insertionNode.
-
-    A node should only be added if the node whose value is equal to
-    insertionNode is in the list. Do not allow duplicate values in the list.
-    */
     void insertAfter(T value, T insertionNode) {
         struct Node* new_node = new Node{value};
 
         if(ifDuplicate(value) && !ifDuplicate(insertionNode)) {
             Node* iterate_node = head;
-            while(iterate_node-value != value) {
 
+            while(iterate_node->value != value) {
+                if (iterate_node->value == insertionNode) {
+                    Node* temp_node = iterate_node->next;
+                    iterate_node->next = new_node;
+                    new_node->next = temp_node;
+                    _size++;
+                }
+                iterate_node = iterate_node->next;
             }
         }
     }
@@ -112,7 +110,7 @@ public:
     }
 
     T at(int index) {
-        if (index >= _size) {
+        if ((index < 0) || (index >= size())) {
             throw out_of_range("out of range");
         }
         else {

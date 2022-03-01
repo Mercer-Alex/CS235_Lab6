@@ -1,0 +1,3 @@
+/home/mercera/CLionProjects/CS235_Lab6/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/mercera/CLionProjects/CS235_Lab6/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/mercera/CLionProjects/CS235_Lab6/cmake-build-debug/CMakeFiles/CS235_Lab6.dir

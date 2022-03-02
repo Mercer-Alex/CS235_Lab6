@@ -18,11 +18,21 @@ private:
 
 public:
 
-    LinkedList(void) {
+    LinkedList() {
         head = nullptr;
         _size = 0;
     };
-    ~LinkedList(void) { };
+    ~LinkedList() {
+        Node* iterate_node = head;
+        while (iterate_node != nullptr) {
+            Node* temp_node = iterate_node;
+            iterate_node = iterate_node->next;
+            delete temp_node;
+        }
+        delete iterate_node;
+        head = nullptr;
+        _size = 0;
+    };
 
     bool is_empty() {
         return _size == 0;
@@ -38,43 +48,48 @@ public:
     }
 
     void insertHead(T value) {
-        struct Node* new_node = new Node{value};
-
-        if (head == nullptr) {
-            head = new_node;
+        if (head != nullptr) {
+            if (ifDuplicate(value)) {
+                Node* new_node = new Node{value};
+                Node* temp_node = head;
+                head = new_node;
+                new_node->next = temp_node;
+                _size++;
+            }
         }
-        else if (ifDuplicate(value)) {
-            Node* temp_node = head;
-            head = new_node;
-            new_node->next = temp_node;
+        else {
+            head = new Node{value};
+            _size++;
         }
-        _size++;
     }
 
     void insertTail(T value) {
-        struct Node* new_node = new Node{value};
 
-        if(is_empty()) {
-            head = new_node;
-        }
-
-        if (ifDuplicate(value)) {
-            Node* node;
-            for (node = head; node != nullptr; node = node->next) {
-                if (node->next == nullptr) {
-                    node->next = new_node;
-                    break;
+        if (head != nullptr) {
+            if (ifDuplicate(value)) {
+                Node* new_node = new Node{value};
+                Node* node;
+                for (node = head; node != nullptr; node = node->next) {
+                    if (node->next == nullptr) {
+                        node->next = new_node;
+                        break;
+                    }
                 }
+                _size++;
             }
+        }
+        else {
+            head = new Node{value};
             _size++;
         }
     }
 
     void insertAfter(T value, T insertionNode) {
-        struct Node* new_node = new Node{value};
+
 
         if(ifDuplicate(value) && !ifDuplicate(insertionNode)) {
             Node* iterate_node = head;
+            Node* new_node = new Node{value};
 
             while(iterate_node->value != value) {
                 if (iterate_node->value == insertionNode) {
@@ -95,17 +110,42 @@ public:
 
     The list may or may not include a node with the given value.
     */
-    void remove(T value) {}
+    void remove(T value) {
+        if(!ifDuplicate(value)) {
+            if(head->value == value) {
+                Node* temp_head = head;
+                head = head->next;
+                delete temp_head;
+                temp_head = nullptr;
+            }
+            else {
+                Node* iterate_node = head;
+                for (iterate_node; iterate_node != nullptr; iterate_node = iterate_node->next) {
+                    if (iterate_node->next->value == value) {
+                        Node *temp_node = iterate_node->next;
+                        iterate_node->next = iterate_node->next->next;
+                        delete temp_node;
+                        temp_node = nullptr;
+                        break;
+                    }
+                }
+            }
+            _size--;
+        }
+    }
 
 
     void clear() {
-        if (is_empty()) {
-        }
-        else {
-            Node* old_head = head;
-            head = head->next;
-            delete old_head;
-            _size--;
+        if (!is_empty()) {
+            Node* iterate_node = head;
+            while (iterate_node != nullptr) {
+                Node* temp_node = iterate_node;
+                iterate_node = iterate_node->next;
+                delete temp_node;
+            }
+            iterate_node = nullptr;
+            head = nullptr;
+            _size = 0;
         }
     }
 
